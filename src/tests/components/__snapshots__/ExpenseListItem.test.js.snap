@@ -12,9 +12,9 @@ exports[`Should render ExpenseListItem with data 1`] = `
     </Link>
   </h3>
   <p>
-    195
-     - 
-    10
+    $1.95
+    -
+    January 1st, 1970
   </p>
 </div>
 `;
@@ -30,7 +30,9 @@ exports[`Should render ExpenseListItem without data 1`] = `
     </Link>
   </h3>
   <p>
-     - 
+    $0.00
+    -
+    January 1st, 1970
   </p>
 </div>
 `;
