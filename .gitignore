@@ -46,6 +46,12 @@ build/Release
 node_modules/
 jspm_packages/
 
+#build files
+public/bundle.js
+public/bundle.js.map
+public/styles.css
+public/styles.css.map
+
 # TypeScript v1 declaration files
 typings/
 
