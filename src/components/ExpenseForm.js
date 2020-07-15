@@ -78,7 +78,7 @@ class ExpenseForm extends Component{
                     <SingleDatePicker
                         date = {this.state.createdAt}
                         onDateChange = {this.onDateChange}
-                        focused = {this.state.focused}
+                        focused = {this.state.focused.focused}
                         onFocusChange = {this.onFocusChange}
                         numberOfMonths = {1}
                         isOutsideRange = {() => false}
