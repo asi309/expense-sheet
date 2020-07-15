@@ -1,0 +1,36 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Should render ExpenseListItem with data 1`] = `
+<div>
+  <h3>
+    <Link
+      to="/edit/1"
+    >
+       
+      Gum
+       
+    </Link>
+  </h3>
+  <p>
+    195
+     - 
+    10
+  </p>
+</div>
+`;
+
+exports[`Should render ExpenseListItem without data 1`] = `
+<div>
+  <h3>
+    <Link
+      to="/edit/undefined"
+    >
+       
+       
+    </Link>
+  </h3>
+  <p>
+     - 
+  </p>
+</div>
+`;
