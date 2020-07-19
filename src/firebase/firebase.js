@@ -1,4 +1,3 @@
-import React, { createContext } from 'react';
 import * as firebase from 'firebase';
 
 const firebaseConfig = {
@@ -16,6 +15,4 @@ firebase.initializeApp(firebaseConfig);
 
 const database = firebase.database();
 
-const FirebaseContext = createContext(null);
-
-export { firebase, FirebaseContext, database as default};
+export { firebase, database as default};
