@@ -3,12 +3,13 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import AppRouter from './routers/AppRouter'
 import configureStore from './store/configureStore';
-import { addExpense } from './actions/expenses';
 
 import 'react-dates/initialize';
 import 'react-dates/lib/css/_datepicker.css';
 import 'normalize.css/normalize.css';
 import './styles/styles.scss';
+import './firebase/firebase';
+import { startSetExpenses } from './actions/expenses';
 
 
 const store = configureStore();
@@ -22,6 +23,7 @@ const store = configureStore();
 // store.dispatch(addExpense({description: "Water Bill", amount:10000}));
 // store.dispatch(addExpense({description: "Gas Bill", amount: 5000, createdAt: 1000}));
 // store.dispatch(addExpense({description: "Rent", amount:10000}));
+// store.dispatch(startSetExpenses());
 
 const jsx = (
     <Provider store={store}>
