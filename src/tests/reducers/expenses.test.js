@@ -44,7 +44,7 @@ test('Should add an expense', () => {
 
 test('Should edit expense', () => {
     const test_edit_expense = {
-        id: 1,
+        id: '1',
         description: 'Chewing gum',
         note: '',
         amount: 1243,
@@ -78,4 +78,16 @@ test('Should not edit expense if expense not found', () => {
 
     const state = expensesReducer(expenses, action);
     expect(state).toEqual(expenses);
+});
+
+test('Should set Expenses', () => {
+    const test_set_expenses = [expenses[0], expenses[2]];
+    
+    const action = {
+        type: 'SET_EXPENSES',
+        expenses: test_set_expenses
+    }
+
+    const state = expensesReducer(expenses, action);
+    expect(state).toEqual(test_set_expenses);
 });

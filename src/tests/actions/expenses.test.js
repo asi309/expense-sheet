@@ -1,10 +1,19 @@
-import { addExpense, startAddExpense, editExpense, removeExpense } from '../../actions/expenses';
+import { addExpense, startAddExpense, editExpense, removeExpense, setExpenses, startSetExpenses, startRemoveExpense, startEditExpense } from '../../actions/expenses';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import expenses from '../fixtures/expenses';
 import database from '../../firebase/firebase';
 
 const createMockStore = configureMockStore([thunk]);
+
+beforeEach((done) => {
+    const expensesData = {};
+    expenses.forEach(({ id, description, amount, note, createdAt }) => {
+        expensesData[id] = { description, amount, note, createdAt }
+    });
+    database.ref('expenses').set(expensesData)
+    .then(() => done());
+});
 
 test('Should setup remove expense action object', () => {
     const action = removeExpense('123abc');
@@ -84,18 +93,49 @@ test('Should setup start add expense action object with default values', (done) 
         done();
     });
 });
-// test('Should setup add expense action object with the default values', () => {
-//     const action = addExpense();
-//     // console.log({action});
-//     // console.log(typeof action);
-//     expect(action).not.toEqual({
-//         type: 'ADD_EXPENSE',
-//         expense: {
-//             description: '',
-//             amount: 0,
-//             note: '',
-//             createdAt: 1,
-//             id: expect.any('String')
-//         }
-//     });
-// });
+
+test('Should setup setExpense action object with data', () => {
+    const action = setExpenses(expenses);
+    expect(action).toEqual({
+        type: 'SET_EXPENSES',
+        expenses
+    });
+});
+
+test('Should fetch the expenses from firebase', (done) => {
+    const store = createMockStore();
+    store.dispatch(startSetExpenses()).then(() => {
+        const actions = store.getActions();
+        expect(actions[0]).toEqual({
+            type: 'SET_EXPENSES',
+            expenses
+        });
+        done();
+    });
+});
+
+test('Should setup startRemoveExpense', (done) => {
+    const store = createMockStore();
+    store.dispatch(startRemoveExpense(expenses[0].id)).then(() => {
+        const actions = store.getActions();
+        expect(actions[0]).toEqual({
+            type: 'REMOVE_EXPENSE',
+            id: expenses[0].id
+        });
+        done();
+    });
+});
+
+test('Should setup startEditExpense', (done) => {
+    const store = createMockStore();
+    store.dispatch(startEditExpense(expenses[0].id, {note: 'Testing start edit expenses'}))
+    .then(() => {
+        const actions = store.getActions();
+        expect(actions[0]).toEqual({
+            type: 'EDIT_EXPENSE',
+            id: expenses[0].id,
+            updates: {note: 'Testing start edit expenses'}
+        });
+        done();
+    });
+});
