@@ -13,6 +13,7 @@ import thunk from 'redux-thunk';
 import expenses from '../fixtures/expenses';
 import database from '../../firebase/firebase';
 
+const uid = '123456';
 const createMockStore = configureMockStore([thunk]);
 
 beforeEach((done) => {
@@ -20,7 +21,7 @@ beforeEach((done) => {
     expenses.forEach(({ id, description, amount, note, createdAt }) => {
         expensesData[id] = { description, amount, note, createdAt }
     });
-    database.ref('expenses').set(expensesData)
+    database.ref(`users/${uid}/expenses`).set(expensesData)
     .then(() => done());
 });
 
@@ -50,7 +51,7 @@ test('Should setup add expense action object with the values', () => {
 });
 
 test('Should setup start add expense action object with the values', (done) => {
-    const store = createMockStore({});
+    const store = createMockStore({ auth: {uid} });
     const expenseData = {
         description: 'Mouse',
         amount: 900,
@@ -68,7 +69,7 @@ test('Should setup start add expense action object with the values', (done) => {
             }
         });
 
-        return database.ref(`expenses/${actions[0].expense.id}`).once('value');
+        return database.ref(`users/${uid}/expenses/${actions[0].expense.id}`).once('value');
     })
     .then((snapshot) => {
         expect(snapshot.val()).toEqual(expenseData);
@@ -77,7 +78,7 @@ test('Should setup start add expense action object with the values', (done) => {
 });
 
 test('Should setup start add expense action object with default values', (done) => {
-    const store = createMockStore({});
+    const store = createMockStore({ auth: {uid} });
     const expenseDefault = {
         description: '',
         amount: 0,
@@ -95,7 +96,7 @@ test('Should setup start add expense action object with default values', (done) 
             }
         });
 
-        return database.ref(`expenses/${actions[0].expense.id}`).once('value');
+        return database.ref(`users/${uid}/expenses/${actions[0].expense.id}`).once('value');
     })
     .then((snapshot) => {
         expect(snapshot.val()).toEqual(expenseDefault);
@@ -112,7 +113,7 @@ test('Should setup setExpense action object with data', () => {
 });
 
 test('Should fetch the expenses from firebase', (done) => {
-    const store = createMockStore();
+    const store = createMockStore({ auth: {uid} });
     store.dispatch(startSetExpenses()).then(() => {
         const actions = store.getActions();
         expect(actions[0]).toEqual({
@@ -124,26 +125,41 @@ test('Should fetch the expenses from firebase', (done) => {
 });
 
 test('Should setup startRemoveExpense', (done) => {
-    const store = createMockStore();
-    store.dispatch(startRemoveExpense(expenses[0].id)).then(() => {
+    const store = createMockStore({ auth: {uid} });
+    const id = expenses[0].id;
+    store.dispatch(startRemoveExpense(id)).then(() => {
         const actions = store.getActions();
         expect(actions[0]).toEqual({
             type: 'REMOVE_EXPENSE',
-            id: expenses[0].id
+            id
         });
+        return database.ref(`users/${uid}/expenses/${id}`).once('value');
+    })
+    .then((snapshot) => {
+        expect(snapshot.val()).toBeFalsy();
         done();
     });
 });
 
 test('Should setup startEditExpense', (done) => {
-    const store = createMockStore();
-    store.dispatch(startEditExpense(expenses[0].id, {note: 'Testing start edit expenses'}))
+    const store = createMockStore({ auth: {uid} });
+    const id = expenses[0].id;
+    store.dispatch(startEditExpense(id, {note: 'Testing start edit expenses'}))
     .then(() => {
         const actions = store.getActions();
         expect(actions[0]).toEqual({
             type: 'EDIT_EXPENSE',
-            id: expenses[0].id,
+            id,
             updates: {note: 'Testing start edit expenses'}
+        });
+        return database.ref(`users/${uid}/expenses/${id}`).once('value');
+    })
+    .then((snapshot) => {
+        expect(snapshot.val()).toEqual({
+            description: expenses[0].description,
+            amount: expenses[0].amount,
+            createdAt: expenses[0].createdAt,
+            note: 'Testing start edit expenses'
         });
         done();
     });
