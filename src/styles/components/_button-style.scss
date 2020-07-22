@@ -1,0 +1,22 @@
+.button{
+    background-color: $aqua;
+    border: none;
+    color: white;
+    display: inline-block;
+    font-size: $l-font-size;
+    margin:$s-size 0 0 0;
+    line-height: 1;
+    padding: $s-size $m-size;
+    text-align: center;
+    text-decoration: none;
+}
+
+.button--link{
+    background: none;
+    margin: 0;
+}
+
+.button--warning{
+    background-color: $red;
+    margin: 0;
+}
