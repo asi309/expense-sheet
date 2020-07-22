@@ -4,7 +4,7 @@ exports[`Should render NotFoundPage 1`] = `
 <div>
   404!
   <Link
-    to="/"
+    to="/dashboard"
   >
     Home
   </Link>
