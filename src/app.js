@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import { startSetExpenses } from './actions/expenses';
+import { startSetExpenses, clearState } from './actions/expenses';
 import { login, logout } from './actions/auth';
 import AppRouter, { history } from './routers/AppRouter'
 import configureStore from './store/configureStore';
@@ -53,6 +53,7 @@ firebase.auth().onAuthStateChanged((user) => {
         }
     } else{
         store.dispatch(logout());
+        store.dispatch(clearState());
         renderApp();
         history.push('/');
     }

@@ -79,3 +79,7 @@ export const startSetExpenses = () => {
         });
     };
 };
+
+export const clearState = () => ({
+    type: 'CLEAR_EXPENSES'
+});
